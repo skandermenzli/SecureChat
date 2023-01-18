@@ -2,6 +2,7 @@ import tkinter
 import tkinter.messagebox
 import customtkinter
 from PIL import Image, ImageTk
+from test import Test
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -18,7 +19,7 @@ class App(customtkinter.CTk):
 
         # configure window
         self.title("Secure chat")
-        self.geometry(f"{1100}x{580}")
+        self.geometry(f"{800}x{580}")
 
         # configure grid layout (4x4)
         #self.grid_columnconfigure(0, weight=1)
@@ -114,6 +115,9 @@ class App(customtkinter.CTk):
         self.back_button.grid(row=5, column=1, padx=20, pady=10)
 
 
+        # user frame
+
+
 
 
         # set default values
@@ -141,12 +145,11 @@ class App(customtkinter.CTk):
 
     def back_button_event(self):
         self.sign_up_frame.grid_remove()
-        self.login_frame.grid(row=0, column=1, rowspan=5, columnspan=4, sticky="nsew")
+        self.login_frame.grid(row=5, column=1, rowspan=5, columnspan=4, sticky="nsew")
 
     def sidebar_button_event(self):
-        print("tt")
+        print("logiiiin")
 
 
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+app = App()
+app.mainloop()

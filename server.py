@@ -43,6 +43,8 @@ def handle(client):
             nickname = nicknames[index]
             broadcast('{} left!'.format(nickname).encode('ascii'))
             nicknames.remove(nickname)
+            key = keys[index]
+            keys.remove(key)
             break
 
 
