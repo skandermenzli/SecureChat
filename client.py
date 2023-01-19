@@ -1,6 +1,5 @@
 import threading
 import socket
-from tkinter.constants import END
 
 import rsa
 import customtkinter

@@ -1,8 +1,4 @@
-import tkinter
-import tkinter.messagebox
 import customtkinter
-from PIL import Image, ImageTk
-from test import Test
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
