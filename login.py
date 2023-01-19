@@ -87,8 +87,8 @@ class App(customtkinter.CTk):
         self.name_label = customtkinter.CTkLabel(self.sign_up_frame, text="Username :",
                                                  font=customtkinter.CTkFont(size=15, weight="bold"))
         self.name_label.grid(row=1, column=0, padx=20, pady=(20, 20))
-        self.name_entry = customtkinter.CTkEntry(self.sign_up_frame, placeholder_text="")
-        self.name_entry.grid(row=1, column=1, padx=(20, 0), pady=(20, 20), sticky="nsew")
+        self.name1_entry = customtkinter.CTkEntry(self.sign_up_frame, placeholder_text="")
+        self.name1_entry.grid(row=1, column=1, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
         self.mail_label = customtkinter.CTkLabel(self.sign_up_frame, text="email :",
                                                  font=customtkinter.CTkFont(size=15, weight="bold"))
@@ -99,8 +99,8 @@ class App(customtkinter.CTk):
         self.password_label = customtkinter.CTkLabel(self.sign_up_frame, text="Password :",
                                                      font=customtkinter.CTkFont(size=15, weight="bold"))
         self.password_label.grid(row=3, column=0, padx=20, pady=(20, 20))
-        self.password_entry = customtkinter.CTkEntry(self.sign_up_frame, placeholder_text="")
-        self.password_entry.grid(row=3, column=1, padx=(20, 0), pady=(20, 20), sticky="nsew")
+        self.password1_entry = customtkinter.CTkEntry(self.sign_up_frame, placeholder_text="")
+        self.password1_entry.grid(row=3, column=1, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
         self.sign_up_button = customtkinter.CTkButton(self.sign_up_frame, command=self.signup_button_event)
         self.sign_up_button.grid(row=4, column=1, padx=20, pady=10)
@@ -145,6 +145,7 @@ class App(customtkinter.CTk):
         # TODO : hedhom farghin , mta3 el register hedhom
         self.name = self.name_entry.get()
         self.password = self.password_entry.get()
+        print(self.name,self.password)
         if connect_ldap_server(self.name,self.password) :
             print("User connected succesfully ")
         else :
@@ -152,9 +153,10 @@ class App(customtkinter.CTk):
 
     def signup_button_event(self):
         print("siiiiign up")
-        self.name = self.name_entry.get()
-        self.password = self.password_entry.get()
+        self.name = self.name1_entry.get()
+        self.password = self.password1_entry.get()
         self.mail = self.mail_entry.get()
+        print(self.name, self.password,self.mail)
         if add_new_user(self.name, "gl,ou=insat"):
              # TODO : move to login
              print("user registered")
