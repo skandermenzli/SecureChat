@@ -2,6 +2,7 @@ import customtkinter
 from test import Test
 from ldap3 import Server, Connection, SAFE_SYNC
 from ldap_utils import add_new_user ,connect_ldap_server
+from client import Client
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -146,8 +147,9 @@ class App(customtkinter.CTk):
         self.name = self.name_entry.get()
         self.password = self.password_entry.get()
         print(self.name,self.password)
-        if connect_ldap_server(self.name,self.password) :
-            print("User connected succesfully ")
+        if connect_ldap_server(self.name,self.password):
+            print("User connected successfully ")
+            Client(self.name)
         else :
             print("Invalid Credentials")
 
@@ -157,9 +159,10 @@ class App(customtkinter.CTk):
         self.password = self.password1_entry.get()
         self.mail = self.mail_entry.get()
         print(self.name, self.password,self.mail)
-        if add_new_user(self.name, "gl,ou=insat"):
+        if add_new_user(self.name, "gl,ou=insat",self.password):
              # TODO : move to login
              print("user registered")
+             self.back_button_event()
         else :
              print("Unable to register")
 

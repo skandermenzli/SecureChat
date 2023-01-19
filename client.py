@@ -1,25 +1,20 @@
 import threading
 import socket
-
+from tkinter.constants import END
+from certif_req import gen_cer_req
 import rsa
 import customtkinter
 
-
-#nickname = input("Choose your Username: ")
-#public_key, private_key = rsa.newkeys(1024)
-
-#client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#client.connect(('127.0.0.1', 7777))
 
 HOST = '127.0.0.1'
 PORT = 7777
 
 class Client():
-    def __init__(self):
+    def __init__(self,username):
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((HOST,PORT))
-        self.nickname = input("Choose your Username: ")
+        self.nickname = username
         self.public_key, self.private_key = rsa.newkeys(1024)
 
         self.gui_done = False
@@ -27,7 +22,7 @@ class Client():
 
         gui_thread = threading.Thread(target=self.gui_loop)
         receive_thread = threading.Thread(target=self.receive)
-
+        gen_cer_req(username)
         gui_thread.start()
         receive_thread.start()
 

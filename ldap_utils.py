@@ -1,15 +1,19 @@
 from ldap3 import Server, Connection, ALL, SUBTREE, BASE
 from ldap3.core.exceptions import LDAPException, LDAPBindError
+import hashlib
+from base64 import b64encode
 
 
+ADMIN_DN = 'cn=admin,dc=example,dc=com'
+ADMIN_PASSWORD = 'faroukdriraldap'
 def connect_ldap_server(pseudo, pwd):
     try:
         # Provide the hostname and port number of the openLDAP
         server_uri = f"ldap://localhost"
         server = Server(server_uri, get_info=ALL)
+        # By default all users are under  ou = gl, ou = insat
         user_dn = "cn =" +pseudo+", ou = gl, ou = insat, dc = example, dc = com"
         print(user_dn)
-        # username and password can be configured during openldap setup
         # TODO : provide your distinguished name and password
         connection = Connection(server,
                                 user=user_dn,
@@ -47,21 +51,29 @@ def get_ldap_users():
 
 
 """ add method takes a user_dn, objectclass and attributes as    dictionary  """
-def add_new_user(name,group):
-    # Bind connection to LDAP server
-    ldap_conn = connect_ldap_server()
+def add_new_user(name,group,password):
+    # Bind connection to LDAP server with admin
+    server_uri = f"ldap://localhost"
+    server = Server(server_uri, get_info=ALL)
+    ldap_conn = Connection(server,
+                                user=ADMIN_DN,
+                                password=ADMIN_PASSWORD)
+    if(not ldap_conn.bind()) :
+        print("Cannot connect to LDAP server")
+        exit(1)
 
-    # this will create testuser inside group1
-    user_dn = "cn=etudiant,ou="+group+",dc=example,dc=com"
+    user_dn = "cn="+name+" ,ou = gl, ou = insat,dc=example,dc=com"
     print(user_dn)
     # user_dn = "cn="+name+",dc=example,dc=com"
-
+    hashed_pwd =  hashlib.md5(password.encode("UTF-8"))
+    hashed_pwd = b'{md5}' +b64encode(hashed_pwd.digest())
     try:
         # object class for a user is inetOrgPerson
-        response = ldap_conn.add(user_dn,'inetOrgPerson', {'sn': name})
+        response = ldap_conn.add(user_dn, 'person', {'sn': name, 'userPassword' : hashed_pwd })
     except LDAPException as e:
         response = e
     print(ldap_conn.result)
+    ldap_conn.unbind()
     return response
 
 """ add method takes a user_dn, objectclass and attributes as    dictionary  """
@@ -70,19 +82,17 @@ def add_new_organisation(group):
     # Bind connection to LDAP server
     ldap_conn = connect_ldap_server()
 
-    # this will create testuser inside group1
     # user_dn = "cn="+name+",ou=+"+group+",dc=example,dc=com"
     user_dn = "ou="+group+",dc=example,dc=com"
 
     try:
-        # object class for a user is inetOrgPerson
-        response = ldap_conn.add('ou=isi,dc=example,dc=com', 'organizationalUnit')
+        response = ldap_conn.add(user_dn, 'organizationalUnit')
     except LDAPException as e:
         exit(1)
     print(response)
 
 if __name__ == "__main__":
     # print(connect_ldap_server())
-    get_ldap_users()
-    # add_new_user("salah","insat")
+    # get_ldap_users()
+    add_new_user("salah","insat","salahldap")
     # add_new_organisation("isi")
