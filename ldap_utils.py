@@ -2,21 +2,25 @@ from ldap3 import Server, Connection, ALL, SUBTREE, BASE
 from ldap3.core.exceptions import LDAPException, LDAPBindError
 
 
-def connect_ldap_server():
+def connect_ldap_server(pseudo, pwd):
     try:
         # Provide the hostname and port number of the openLDAP
         server_uri = f"ldap://localhost"
         server = Server(server_uri, get_info=ALL)
+        user_dn = "cn =" +pseudo+", ou = gl, ou = insat, dc = example, dc = com"
+        print(user_dn)
         # username and password can be configured during openldap setup
         # TODO : provide your distinguished name and password
         connection = Connection(server,
-                                user='cn=admin,dc=example,dc=com',
-                                password='')
+                                user=user_dn,
+                                password=pwd)
         bind_response = connection.bind()  # Returns True or False
     except LDAPBindError as e:
         connection = e
         exit(1)
-    return connection
+    if(not bind_response):
+        print("Error Authentification" , connection.result['description'])
+    return bind_response
 
 
 # For groups provide a groupid number instead of a uidNumber
@@ -48,17 +52,17 @@ def add_new_user(name,group):
     ldap_conn = connect_ldap_server()
 
     # this will create testuser inside group1
-    user_dn = "ou="+name+",ou="+group+",dc=example,dc=com"
+    user_dn = "cn=etudiant,ou="+group+",dc=example,dc=com"
     print(user_dn)
     # user_dn = "cn="+name+",dc=example,dc=com"
 
     try:
         # object class for a user is inetOrgPerson
-        response = ldap_conn.add(user_dn,'organizationalUnit')
+        response = ldap_conn.add(user_dn,'inetOrgPerson', {'sn': name})
     except LDAPException as e:
         response = e
-    print(response)
     print(ldap_conn.result)
+    return response
 
 """ add method takes a user_dn, objectclass and attributes as    dictionary  """
 def add_new_organisation(group):
@@ -78,7 +82,7 @@ def add_new_organisation(group):
     print(response)
 
 if __name__ == "__main__":
-    # connect_ldap_server()
-    # get_ldap_users()
-    add_new_user("gl","insat")
+    # print(connect_ldap_server())
+    get_ldap_users()
+    # add_new_user("salah","insat")
     # add_new_organisation("isi")
