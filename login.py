@@ -1,8 +1,10 @@
 import tkinter
 import tkinter.messagebox
 import customtkinter
-from PIL import Image, ImageTk
+#from PIL import Image, ImageTk
 from test import Test
+#import ldap
+from ldap3 import Server, Connection, SAFE_SYNC
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -66,8 +68,8 @@ class App(customtkinter.CTk):
         self.logo_label.grid(row=0, column=1, padx=20, pady=(20, 10),sticky="n")
         self.name_label = customtkinter.CTkLabel(self.login_frame, text="Username :",font=customtkinter.CTkFont(size=15, weight="bold"))
         self.name_label.grid(row=1,column=0,padx=20, pady=(20, 20))
-        self.entry = customtkinter.CTkEntry(self.login_frame, placeholder_text="")
-        self.entry.grid(row=1, column=1,  padx=(20, 0), pady=(20, 20), sticky="nsew")
+        self.name_entry = customtkinter.CTkEntry(self.login_frame, placeholder_text="")
+        self.name_entry.grid(row=1, column=1,  padx=(20, 0), pady=(20, 20), sticky="nsew")
 
         self.password_label = customtkinter.CTkLabel(self.login_frame, text="Password :",
                                                  font=customtkinter.CTkFont(size=15, weight="bold"))
@@ -75,7 +77,7 @@ class App(customtkinter.CTk):
         self.password_entry = customtkinter.CTkEntry(self.login_frame, placeholder_text="")
         self.password_entry.grid(row=2, column=1, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
-        self.login_button = customtkinter.CTkButton(self.login_frame, command=self.sidebar_button_event)
+        self.login_button = customtkinter.CTkButton(self.login_frame, command=self.login_button_event)
         self.login_button.grid(row=3, column=1, padx=20, pady=10)
 
         self.sign_label = customtkinter.CTkLabel(self.login_frame, text="No account ? :",
@@ -94,14 +96,14 @@ class App(customtkinter.CTk):
         self.name_label = customtkinter.CTkLabel(self.sign_up_frame, text="Username :",
                                                  font=customtkinter.CTkFont(size=15, weight="bold"))
         self.name_label.grid(row=1, column=0, padx=20, pady=(20, 20))
-        self.entry = customtkinter.CTkEntry(self.sign_up_frame, placeholder_text="")
-        self.entry.grid(row=1, column=1, padx=(20, 0), pady=(20, 20), sticky="nsew")
+        self.name_entry = customtkinter.CTkEntry(self.sign_up_frame, placeholder_text="")
+        self.name_entry.grid(row=1, column=1, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
         self.mail_label = customtkinter.CTkLabel(self.sign_up_frame, text="email :",
                                                  font=customtkinter.CTkFont(size=15, weight="bold"))
         self.mail_label.grid(row=2, column=0, padx=20, pady=(20, 20))
-        self.entry = customtkinter.CTkEntry(self.sign_up_frame, placeholder_text="")
-        self.entry.grid(row=2, column=1, padx=(20, 0), pady=(20, 20), sticky="nsew")
+        self.mail_entry = customtkinter.CTkEntry(self.sign_up_frame, placeholder_text="")
+        self.mail_entry.grid(row=2, column=1, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
         self.password_label = customtkinter.CTkLabel(self.sign_up_frame, text="Password :",
                                                      font=customtkinter.CTkFont(size=15, weight="bold"))
@@ -109,7 +111,7 @@ class App(customtkinter.CTk):
         self.password_entry = customtkinter.CTkEntry(self.sign_up_frame, placeholder_text="")
         self.password_entry.grid(row=3, column=1, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
-        self.sign_up_button = customtkinter.CTkButton(self.sign_up_frame, command=self.sidebar_button_event)
+        self.sign_up_button = customtkinter.CTkButton(self.sign_up_frame, command=self.signup_button_event)
         self.sign_up_button.grid(row=4, column=1, padx=20, pady=10)
         self.back_button = customtkinter.CTkButton(self.sign_up_frame, command=self.back_button_event,fg_color="transparent",border_width=2, text_color=("gray10", "#DCE4EE"),)
         self.back_button.grid(row=5, column=1, padx=20, pady=10)
@@ -145,10 +147,24 @@ class App(customtkinter.CTk):
 
     def back_button_event(self):
         self.sign_up_frame.grid_remove()
-        self.login_frame.grid(row=5, column=1, rowspan=5, columnspan=4, sticky="nsew")
+        self.login_frame.grid(row=0, column=1, rowspan=5, columnspan=4, sticky="nsew")
 
-    def sidebar_button_event(self):
+    def login_button_event(self):
         print("logiiiin")
+        self.name = self.name_entry.get()
+        self.password = self.password_entry.get()
+        print(self.name)
+        print(self.password)
+
+
+    def signup_button_event(self):
+        print("siiiiign up")
+        self.name = self.name_entry.get()
+        self.password = self.password_entry.get()
+        self.mail = self.mail_entry.get()
+        print(self.name)
+        print(self.password)
+        print(self.mail)
 
 
 app = App()
